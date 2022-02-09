@@ -34,7 +34,7 @@ class ShoppingCart {
 class ProductItem {
   constructor(product) {
     this.product = product;
-    console.log(this.product);
+    // console.log(this.product);
   }
 
   addToCart() {
@@ -99,13 +99,17 @@ class ProductList {
 /* here we are combine the function of cart and product  */
 class Shop {
   render() {
-    const renderHook = document.getElementById("app");
+   /*  const renderHook = document.getElementById("app");
     this.cart = new ShoppingCart();
     const cartEl = this.cart.render();
     const productList = new ProductList();
     const prodListEl = productList.render();
     renderHook.append(cartEl);
-    renderHook.append(prodListEl);
+    renderHook.append(prodListEl); */
+    this.cart = new ShoppingCart('app');
+    this.cart.render();
+    const productList = new ProductList('app');
+    productList.render();
   }
 }
 
