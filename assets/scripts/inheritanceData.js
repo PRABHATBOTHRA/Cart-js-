@@ -6,8 +6,40 @@ class Product {
     this.price = price;
   }
 }
+
+class ElementAttribute {
+  constructor(attrName, attrValue) {
+    this.name = attrName;
+    this.value = attrValue;
+  }
+}
+
+class Component {
+  constructor(renderHookId) {
+    this.hookId = renderHookId;
+  }
+
+  createRootElement(tag, cssClasses, attributes) {
+    const rootElement = this.createRootElement(tag);
+    if (cssClasses) {
+      rootElement.classList.add(cssClasses);
+    }
+    if (attributes && attributes.length > 0) {
+      for (const attr of attributes) {
+        rootElement.setAttribute(attr.name, attr.value);
+        // console.log(attr.name, attr.value);
+      }
+    }
+
+    document.getElementById(this.hookId).append(rootElement);
+  }
+}
 class ShoppingCart {
   items = [];
+  set cartItem(value) {
+    this.items = value;
+    this.totalOutput.innerHTML = ` <h2>Total :\$${this.totalAmount.toFixed()}</h2>`;
+  }
   get totalAmount() {
     const sum = this.items.reduce(
       (prevValue, currentValue) => prevValue + currentValue.price,
@@ -16,15 +48,16 @@ class ShoppingCart {
     return sum;
   }
   /* static */ addProduct(product) {
-    this.items.push(product);
-    this.totalOutput.innerHTMLf = ` <h2>Total :\$${this.totalAmount}</h2>`;
+    const updatedItem = [...this.items];
+    updatedItem.push(product);
+    this.cartItem = updatedItem;
   }
-  
+
   render() {
     const cartEl = document.createElement("section");
     cartEl.innerHTML = `
-    <h2>Total :\$${0}</h2>
-    <button>Order Now</button>`;
+      <h2>Total :\$${0}</h2>
+      <button>Order Now</button>`;
 
     cartEl.className = "cart";
     this.totalOutput = cartEl.querySelector("h2");
@@ -50,16 +83,16 @@ class ProductItem {
     const prodEl = document.createElement("li");
     prodEl.className = "product-item";
     prodEl.innerHTML = `
-                  <div>
-                    <img src="${this.product.imageUrl}" alt="${this.product.title}" >
-                    <div class="product-item__content">
-                      <h2>${this.product.title}</h2>
-                      <h3>\$${this.product.price}</h3>
-                      <p>${this.product.description}</p>
-                      <button>Add to Cart</button>
+                    <div>
+                      <img src="${this.product.imageUrl}" alt="${this.product.title}" >
+                      <div class="product-item__content">
+                        <h2>${this.product.title}</h2>
+                        <h3>\$${this.product.price}</h3>
+                        <p>${this.product.description}</p>
+                        <button>Add to Cart</button>
+                      </div>
                     </div>
-                  </div>
-                `;
+                  `;
     const addCartButton = prodEl.querySelector("button");
     addCartButton.addEventListener("click", this.addToCart.bind(this));
     return prodEl;
